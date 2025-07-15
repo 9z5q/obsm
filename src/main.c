@@ -1,112 +1,51 @@
 ﻿#include "main.h"
 
-int main(int argc, char* argv[])
+#pragma region public
+INT* mem = NULL;
+INT cc = 0;
+#pragma endregion
+
+INT main(INT argc, char* argv[])
 {
-    Seeds((DWORD)__rdtsc());
 
-    encdecrypt(argv[1],1);
-
-    getchar();
-}
-
-BOOL encdecrypt(char* path, INT selection) {
-
-    INT c = 0;
-    INT cc = 0;
-
-    FILE* f = fopen(path, "rb");
-
-    if (f == NULL) {
-        return FALSE;
+    if (argc < 2) {
+        printf("plz set file bro");
+        return;
     }
 
-    INT* mem = malloc(1024 * sizeof(INT));
-    if (!mem) {
-        
-        return FALSE;
-    
-    }
+    printf("Enter 0 or 1.\n0:Encrypt file\n1:Decrypt file(you need to put key and nonce on same dir)\n>>");
 
-    while ((c = fgetc(f)) != EOF) {
-        
-        if (cc >= 1024) {
-        
-            INT* Nmem = realloc(mem, (cc + 1024) * sizeof(INT));
-            if (!Nmem) {
+    scanf_s("%d", &num);
 
-                free(Nmem);
-                return FALSE;
+    printf("Delete source file? (0/1)\n>>");
 
-            }
-            
-            mem = Nmem;
+    scanf_s("%d", &num2);
 
-        }
+    Readfile(argv[1]);
 
-        mem[cc++] = (unsigned char)c;
+    FILE* out = (num == 0) ? fopen("enc", "wb") : fopen("decrypted", "wb");
 
-    }
-
-    
-    fclose(f);
-
-    FILE* o = NULL;
-    if (selection == 0) {
-        o = fopen("enc", "wb"); 
-    }
-    else {
-        o = fopen("decrypted", "wb"); 
-    }
-
-
-    if (!o) {
+    if (!out) {
 
         free(mem);
-        return 0;
+        return;
 
     }
 
-    UINT32 key;
-    
-    switch (selection) {
+    if (num == 0) {
 
-        case 0:
+        Encrypt(out);
 
-            key = Xorshift();
+    }
+    else if (num == 1) {
 
-            printf("%u", key);
-
-            for (INT x = 0; x < cc; x++) {
-
-                UINT hashed = mem[x] ^ key;
-
-                fputc((unsigned char)hashed, o);
-            }
-
-            break;
-
-        case 1:
-            scanf_s("%u", &key);
-            
-            UINT tobyte = key & 0xFF;
-
-            for (INT x = 0; x < cc; x++) {
-
-                UINT Dec = mem[x] ^ tobyte;
-
-                fputc((unsigned char)Dec, o);
-            }
-
-            break;
-
-        default:
-
-            break;
+        Decrypt(out);
 
     }
 
-    fclose(o);
-    free(mem);
-    
-    return TRUE;
+    if (num2 == 0) {
+
+        remove(argv[1]);
+
+    }
 }
