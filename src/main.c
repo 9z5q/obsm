@@ -7,6 +7,8 @@ INT cc = 0;
 
 INT main(INT argc, char* argv[])
 {
+    INT num;
+    INT num2;
 
     if (argc < 2) {
         printf("plz set file bro");
@@ -17,11 +19,7 @@ INT main(INT argc, char* argv[])
 
     scanf_s("%d", &num);
 
-    printf("Delete source file? (0/1)\n>>");
-
-    scanf_s("%d", &num2);
-
-    Readfile(argv[1]);
+    NewReadFile(argv[1]);
 
     FILE* out = (num == 0) ? fopen("enc", "wb") : fopen("decrypted", "wb");
 
@@ -34,6 +32,16 @@ INT main(INT argc, char* argv[])
 
     if (num == 0) {
 
+        printf("Delete source file? (0/1)\n>>");
+
+        scanf_s("%d", &num2);
+
+        if (num2 == 0) {
+
+            remove(argv[1]);
+
+        }
+
         Encrypt(out);
 
     }
@@ -43,9 +51,4 @@ INT main(INT argc, char* argv[])
 
     }
 
-    if (num2 == 0) {
-
-        remove(argv[1]);
-
-    }
 }

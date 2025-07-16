@@ -25,11 +25,7 @@ VOID Encrypt(FILE* stream) {
 	chacha20_init_context(&ctx, key, nonce, 0);
 	chacha20_xor(&ctx, (UINT8*)mem, cc);
 
-	for (INT i = 0; i < cc; i++) {
-
-		fputc((unsigned char)mem[i], stream);
-
-	}
+	fwrite(mem, 1, cc, stream);
 
 	fclose(stream);
 	return;
@@ -58,11 +54,7 @@ VOID Decrypt(FILE* stream) {
 	chacha20_init_context(&ctx, key, nonce, 0);
 	chacha20_xor(&ctx, (UINT8*)mem, cc);
 
-	for (INT i = 0; i < cc; i++) {
-
-		fputc((unsigned char)mem[i], stream);
-
-	}
+	fwrite(mem, 1, cc, stream);
 
 	fclose(stream);
 

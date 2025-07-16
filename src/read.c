@@ -1,44 +1,34 @@
 #include "main.h"
 
-VOID Readfile(char* path) {
+VOID NewReadFile(char* path) {
 
     INT c = 0;
 
     FILE* f = fopen(path, "rb");
 
-    if (f == NULL) {
+    if (!f) {
 
+        perror("error:");
         return;
 
     }
 
-    mem = malloc(1024 * sizeof(INT));
+    fseek(f, 0, SEEK_END);
+    LONG size = ftell(f);
+    rewind(f);
+
+    mem = malloc(size * sizeof(unsigned char));
 
     if (!mem) {
 
         fclose(f);
+        perror("mem error");
         return;
 
     }
 
-    while ((c = fgetc(f)) != EOF) {
-
-        if (cc >= 1024) {
-
-            INT* Nmem = realloc(mem, (cc + 1024) * sizeof(INT));
-            if (!Nmem) {
-
-                free(Nmem);
-                return;
-
-            }
-
-            mem = Nmem;
-
-        }
-
-        mem[cc++] = (unsigned char)c;
-
-    }
+    cc = (INT)fread(mem, 1, size, f);
     fclose(f);
+    return;
+
 }

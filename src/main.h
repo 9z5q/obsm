@@ -6,16 +6,15 @@
 #include <stddef.h>
 #include <string.h>
 #include <assert.h>
+#include <stdlib.h>
 #include "Chacha20.h"
 #pragma warning( disable:4996 )
 #pragma comment(lib, "bcrypt.lib")
-VOID Readfile(char* path);
+VOID NewReadFile(char* path);
 VOID Encrypt(FILE* stream);
 VOID Decrypt(FILE* stream);
 
 #pragma region public
-INT num;
-INT num2;
 extern INT* mem;
 extern INT cc;
 uint8_t key[32];
